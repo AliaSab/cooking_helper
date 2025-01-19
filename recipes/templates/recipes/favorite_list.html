@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Favorites</title>
+</head>
+<body>
+    <h1>My Favorites</h1>
+    <ul>
+        {% for favorite in favorites %}
+            <li><a href="{% url 'recipe_detail' favorite.recipe.pk %}">{{ favorite.recipe.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'recipe_list' %}">Back to List</a>
+</body>
+</html>
