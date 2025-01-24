@@ -1,0 +1,21 @@
+<!-- templates/recipes/cart_detail.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <h2>Shopping Cart</h2>
+    <ul>
+        {% for ingredient, quantity in cart.items %}
+            <li>{{ ingredient }}: {{ quantity }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'recipe_list' %}">Back to Recipes</a>
+    <form method="post" action="{% url 'clear_cart' %}">
+        {% csrf_token %}
+        <button type="submit">Clear Cart</button>
+    </form>
+</body>
+</html>

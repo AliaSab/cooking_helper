@@ -10,6 +10,7 @@
     <p>{{ recipe.ingredients }}</p>
     <h2>Instructions</h2>
     <p>{{ recipe.instructions }}</p>
+    <a href="{% url 'add_to_cart' recipe.pk %}">Add to Cart</a>
     <a href="{% url 'add_to_favorites' recipe.pk %}">Add to Favorites</a>
     <a href="{% url 'recipe_list' %}">Back to List</a>
 </body>

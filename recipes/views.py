@@ -3,6 +3,7 @@ from .models import Recipe, Favorite
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from .forms import RecipeForm
 
 
 def recipe_list(request):
@@ -39,3 +40,46 @@ def signup(request):
 def favorite_list(request):
     favorites = Favorite.objects.filter(user=request.user)
     return render(request, 'recipes/favorite_list.html', {'favorites': favorites})
+
+@login_required
+def profile(request):
+    user = request.user
+    return render(request, 'recipes/profile.html', {'user': user})
+
+@login_required
+def add_to_cart(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    ingredients = recipe.ingredients.split(',')
+    cart = request.session.get('cart', {})
+    for ingredient in ingredients:
+        ingredient = ingredient.strip()
+        if ingredient in cart:
+            cart[ingredient] += 1
+        else:
+            cart[ingredient] = 1
+    request.session['cart'] = cart
+    return redirect('cart_detail')
+
+@login_required
+def cart_detail(request):
+    cart = request.session.get('cart', {})
+    return render(request, 'recipes/cart_detail.html', {'cart': cart})
+
+@login_required
+def clear_cart(request):
+    request.session['cart'] = {}
+    return redirect('cart_detail')
+
+
+@login_required
+def add_recipe(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.created_by = request.user  # Устанавливаем текущего пользователя как создателя рецепта
+            recipe.save()
+            return redirect('recipe_detail', pk=recipe.pk)
+    else:
+        form = RecipeForm()
+    return render(request, 'recipes/add_recipe.html', {'form': form})

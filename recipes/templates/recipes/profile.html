@@ -1,0 +1,14 @@
+<!-- templates/recipes/profile.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+    <h2>User Profile</h2>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+    <a href="{% url 'recipe_list' %}">Back to Recipes</a>
+</body>
+</html>

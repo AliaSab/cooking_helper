@@ -1,0 +1,17 @@
+<!-- templates/recipes/add_recipe.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Recipe</title>
+</head>
+<body>
+    <h2>Add New Recipe</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Recipe</button>
+    </form>
+    <a href="{% url 'recipe_list' %}">Back to Recipes</a>
+</body>
+</html>
