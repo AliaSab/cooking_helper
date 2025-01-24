@@ -1,3 +1,5 @@
+<!-- templates/recipes/recipe_detail.html -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,13 +7,15 @@
 </head>
 <body>
     <h1>{{ recipe.name }}</h1>
+    {% if recipe.image %}
+        <img src="{{ recipe.image_thumbnail.url }}" alt="{{ recipe.name }}">
+    {% endif %}
     <p>{{ recipe.description }}</p>
     <h2>Ingredients</h2>
     <p>{{ recipe.ingredients }}</p>
     <h2>Instructions</h2>
     <p>{{ recipe.instructions }}</p>
     <a href="{% url 'add_to_cart' recipe.pk %}">Add to Cart</a>
-    <a href="{% url 'add_to_favorites' recipe.pk %}">Add to Favorites</a>
     <a href="{% url 'recipe_list' %}">Back to List</a>
 </body>
 </html>
