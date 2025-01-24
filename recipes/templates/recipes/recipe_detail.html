@@ -1,17 +1,98 @@
+<!-- templates/recipes/recipe_detail.html -->
 <!DOCTYPE html>
 <html>
 <head>
     <title>{{ recipe.name }}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Подключение Bootstrap CSS для упрощения стилизации -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 60px;
+        }
+        .recipe-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .recipe-title {
+            margin-bottom: 20px;
+        }
+        .recipe-description {
+            font-size: 1.1rem;
+            color: #555555;
+        }
+        .recipe-details {
+            margin-top: 30px;
+        }
+        .recipe-details h2 {
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 5px;
+        }
+        .recipe-details p {
+            line-height: 1.6;
+        }
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+        .action-buttons a {
+            flex: 1;
+            text-align: center;
+        }
+        .btn-add-to-cart {
+            background-color: #28a745;
+            border: none;
+            color: #ffffff;
+        }
+        .btn-add-to-cart:hover {
+            background-color: #218838;
+            color: #ffffff;
+        }
+        .btn-add-to-favorites {
+            background-color: #ffc107;
+            border: none;
+            color: #212529;
+        }
+        .btn-add-to-favorites:hover {
+            background-color: #e0a800;
+            color: #212529;
+        }
+        .btn-back-to-list {
+            background-color: #17a2b8;
+            border: none;
+            color: #ffffff;
+        }
+        .btn-back-to-list:hover {
+            background-color: #138496;
+            color: #ffffff;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ recipe.name }}</h1>
-    <p>{{ recipe.description }}</p>
-    <h2>Ingredients</h2>
-    <p>{{ recipe.ingredients }}</p>
-    <h2>Instructions</h2>
-    <p>{{ recipe.instructions }}</p>
-    <a href="{% url 'add_to_cart' recipe.pk %}">Add to Cart</a>
-    <a href="{% url 'add_to_favorites' recipe.pk %}">Add to Favorites</a>
-    <a href="{% url 'recipe_list' %}">Back to List</a>
+    <div class="container">
+        <div class="recipe-container">
+            <h1 class="recipe-title">{{ recipe.name }}</h1>
+            <p class="recipe-description">{{ recipe.description }}</p>
+            <div class="recipe-details">
+                <h2>Ingredients</h2>
+                <p>{{ recipe.ingredients }}</p>
+                <h2>Instructions</h2>
+                <p>{{ recipe.instructions }}</p>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'add_to_cart' recipe.pk %}" class="btn btn-add-to-cart">Add to Cart</a>
+                <a href="{% url 'add_to_favorites' recipe.pk %}" class="btn btn-add-to-favorites">Add to Favorites</a>
+                <a href="{% url 'recipe_list' %}" class="btn btn-back-to-list">Back to List</a>
+            </div>
+        </div>
+    </div>
+    <!-- Подключение Bootstrap JS (опционально) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
