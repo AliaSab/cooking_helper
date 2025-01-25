@@ -1,9 +1,12 @@
+from statistics import quantiles
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Recipe, Favorite
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .forms import RecipeForm
+from collections import defaultdict
 
 
 def recipe_list(request):
@@ -50,14 +53,22 @@ def profile(request):
 def add_to_cart(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     ingredients = recipe.ingredients.split(',')
-    cart = request.session.get('cart', {})
+    cart = request.session.get('cart', defaultdict(int))
     for ingredient in ingredients:
-        ingredient = ingredient.strip()
-        if ingredient in cart:
-            cart[ingredient] += 1
+        if ingredient.split()[-1] != "вкусу":
+            unit = ingredient.split()[-1]
+            quantity = ingredient.split()[-2]
+            name = " ".join(ingredient.split()[:-2])
+            key = f"{name} ({unit})"
+            if key in cart:
+                cart[key] += int(quantity)
+            else:
+                cart[key] = int(quantity)
         else:
-            cart[ingredient] = 1
-    request.session['cart'] = cart
+            key = ingredient
+            if key not in cart:
+                cart[key] = 1
+    request.session['cart'] = dict(cart)
     return redirect('cart_detail')
 
 @login_required
@@ -74,7 +85,7 @@ def clear_cart(request):
 @login_required
 def add_recipe(request):
     if request.method == 'POST':
-        form = RecipeForm(request.POST)
+        form = RecipeForm(request.POST, request.FILES)
         if form.is_valid():
             recipe = form.save(commit=False)
             recipe.created_by = request.user  # Устанавливаем текущего пользователя как создателя рецепта

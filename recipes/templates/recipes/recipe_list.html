@@ -1,21 +1,63 @@
+<!-- templates/recipes/recipe_list.html -->
+
 <!DOCTYPE html>
+{% load static %}
 <html>
 <head>
     <title>Recipe List</title>
+    <style>
+        /* Простой стиль для отображения картинок и текста */
+        .recipe-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .recipe-item img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 8px;
+        }
+        .recipe-details {
+            flex: 1;
+        }
+        .recipe-details h3 {
+            margin: 0;
+        }
+        .recipe-details p {
+            margin: 5px 0 0 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Recipes</h1>
     {% if user.is_authenticated %}
         <p>Hello, {{ user.username }}!</p>
-        <a href="{% url 'logout' %}">Logout</a>
+        <form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Logout</button>
+</form>
         <a href="{% url 'add_recipe' %}">Add Recipe</a>
+        <a href="{% url 'cart_detail' %}">Cart</a>
+        <a href="{% url 'profile' %}">Profile</a>
     {% else %}
         <a href="{% url 'login' %}">Login</a>
         <a href="{% url 'signup' %}">Sign Up</a>
     {% endif %}
     <ul>
         {% for recipe in recipes %}
-            <li><a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a></li>
+            <li class="recipe-item">
+                {% if recipe.image %}
+                    <img src="{{ recipe.image_thumbnail.url }}" alt="{{ recipe.name }}">
+                {% else %}
+                    <img src="{% static 'recipes/default_recipe.jpg' %}" alt="Default Recipe Image">
+                {% endif %}
+                <div class="recipe-details">
+                    <h3><a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a></h3>
+                    <p>{{ recipe.description }}</p>
+                </div>
+            </li>
         {% endfor %}
     </ul>
     <a href="{% url 'favorite_list' %}">My Favorites</a>
