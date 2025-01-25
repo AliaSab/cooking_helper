@@ -32,7 +32,7 @@ def signup(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Автоматический вход после регистрации
+            #login(request, user)  # Автоматический вход после регистрации
             return redirect('recipe_list')
     else:
         form = UserCreationForm()

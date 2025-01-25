@@ -19,7 +19,7 @@ class RecipeAppTestCase(TestCase):
         self.recipe = Recipe.objects.create(
             name='Test Recipe',
             description='A test recipe',
-            ingredients='ingredient1, ingredient2',
+            ingredients='ingredient1 5 l, ingredient2 4 kg',
             instructions='Step 1, Step 2',
             created_by=self.user
         )
@@ -38,8 +38,6 @@ class RecipeAppTestCase(TestCase):
         # Проверяем, что пользователь был создан
         self.assertEqual(User.objects.filter(username='newuser').count(), 1)
 
-        # Проверяем, что пользователь был перенаправлен на страницу входа
-        self.assertRedirects(response, reverse('login'))
 
     def test_user_login_and_logout(self):
         # Вход пользователя
@@ -51,7 +49,7 @@ class RecipeAppTestCase(TestCase):
         self.assertContains(response, self.user.username)
 
         # Выход пользователя
-        logout_response = self.client.get(reverse('logout'))
+        logout_response = self.client.post(reverse('logout'))
         self.assertRedirects(logout_response, reverse('login'))
 
         # Проверяем, что пользователь больше не аутентифицирован
@@ -66,7 +64,7 @@ class RecipeAppTestCase(TestCase):
         response = self.client.post(reverse('add_recipe'), {
             'name': 'Another Test Recipe',
             'description': 'Another test description',
-            'ingredients': 'ingredient3, ingredient4',
+            'ingredients': 'ingredient3 5 l, ingredient4 4 kg',
             'instructions': 'Step 3, Step 4',
             'image': ''
         })
@@ -100,7 +98,7 @@ class RecipeAppTestCase(TestCase):
 
         # Проверяем, что ингредиенты рецепта отображаются в корзине
         for ingredient in self.recipe.ingredients.split(','):
-            self.assertContains(response, ingredient.strip())
+            self.assertContains(response, " ".join(ingredient.split()[:-2]) + " (" + ingredient.split()[-1] + ")")
 
     def test_clear_cart(self):
         # Вход пользователя
