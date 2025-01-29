@@ -10,7 +10,7 @@
     <style>
         body {
             background-color: #f8f9fa;
-            padding-top: 60px;
+            padding-top: 70px; /* Отступ для фиксированной навигационной панели */
         }
         .recipe-container {
             background-color: #ffffff;
@@ -20,6 +20,8 @@
         }
         .recipe-title {
             margin-bottom: 20px;
+            font-size: 2rem;
+            color: #333333;
         }
         .recipe-image {
             max-width: 100%;
@@ -39,9 +41,12 @@
             margin-bottom: 15px;
             border-bottom: 2px solid #e9ecef;
             padding-bottom: 5px;
+            font-size: 1.5rem;
+            color: #333333;
         }
         .recipe-details p {
             line-height: 1.6;
+            color: #555555;
         }
         .action-buttons {
             margin-top: 30px;
@@ -52,6 +57,9 @@
             background-color: #28a745;
             border: none;
             color: #ffffff;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.25rem;
         }
         .btn-add-to-cart:hover {
             background-color: #218838;
@@ -61,38 +69,117 @@
             background-color: #17a2b8;
             border: none;
             color: #ffffff;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.25rem;
         }
         .btn-back-to-list:hover {
             background-color: #138496;
             color: #ffffff;
         }
+        .btn-add-to-fav {
+            background-color: #FFCF48;
+            border: none;
+            color: #212529;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+        }
+        .btn-add-to-fav:hover {
+            background-color: #e0a800;
+            color: #212529;
+        }
+        .btn-remove-from-fav {
+            background-color: #dc3545;
+            border: none;
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.25rem;
+        }
+        .btn-remove-from-fav:hover {
+            background-color: #c82333;
+            color: #ffffff;
+        }
+        @media (max-width: 576px) {
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Навигационная панель (пример) -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'recipe_list' %}">RecipeApp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'add_recipe' %}">Добавить рецепт</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cart_detail' %}">Корзина</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Профиль
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
+                                <li><a class="dropdown-item" href="{% url 'favorite_list' %}">Избранное</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">Зарегистрироваться</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
         <div class="recipe-container">
             <h1 class="recipe-title">{{ recipe.name }}</h1>
             {% if recipe.image_thumbnail %}
-                <img src="{{ recipe.image_thumbnail.url }}" alt="{{ recipe.name }}">
+                <img src="{{ recipe.image_thumbnail.url }}" alt="{{ recipe.name }}" class="recipe-image">
             {% elif recipe.image %}
-                <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}">
+                <img src="{{ recipe.image.url }}" alt="{{ recipe.name }}" class="recipe-image">
             {% else %}
-                <p>No image available</p>
+                <p>Нет изображения</p>
             {% endif %}
             <p class="recipe-description">{{ recipe.description }}</p>
             <div class="recipe-details">
-                <h2>Ingredients</h2>
+                <h2>Ингредиенты</h2>
                 <p>{{ recipe.ingredients }}</p>
-                <h2>Instructions</h2>
+                <h2>Рецепт</h2>
                 <p>{{ recipe.instructions }}</p>
             </div>
             <div class="action-buttons">
-                <a href="{% url 'add_to_cart' recipe.pk %}" class="btn btn-add-to-cart">Add to Cart</a>
-                <a href="{% url 'recipe_list' %}" class="btn btn-back-to-list">Back to List</a>
+                <a href="{% url 'add_to_cart' recipe.pk %}" class="btn btn-add-to-cart">Добавить в корзину</a>
+                {% if recipe in user.recipe.all %}
+                    <a href="{% url 'add_to_favorites' recipe.pk %}" class="btn btn-remove-from-fav">Удалить из избранного</a>
+                {% else %}
+                    <a href="{% url 'add_to_favorites' recipe.pk %}" class="btn btn-add-to-fav">Добавить в избранное</a>
+                {% endif %}
+                <a href="{% url 'recipe_list' %}" class="btn btn-back-to-list">Назад</a>
             </div>
         </div>
     </div>
-    <!-- Подключение Bootstrap JS (опционально) -->
+    <!-- Подключение Bootstrap JS (обязательно для работы Navbar) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
