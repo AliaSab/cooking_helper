@@ -1,10 +1,7 @@
-from statistics import quantiles
-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Recipe, Favorite
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
 from .forms import RecipeForm
 from collections import defaultdict
 
@@ -23,16 +20,13 @@ def add_to_favorites(request, pk):
     favorite, created = Favorite.objects.get_or_create(user=request.user, recipe=recipe)
     if created:
         return redirect('recipe_detail', pk=pk)
-    else:
-        favorite.delete()
-        return redirect('recipe_detail', pk=pk)
+    favorite.delete()
+    return redirect('recipe_detail', pk=pk)
 
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            #login(request, user)  # Автоматический вход после регистрации
             return redirect('recipe_list')
     else:
         form = UserCreationForm()

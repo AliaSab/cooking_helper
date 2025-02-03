@@ -4,9 +4,6 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from .models import Recipe
 from django.urls import reverse
-import os
-from django.conf import settings
-from django.core.files.uploadedfile import SimpleUploadedFile
 
 class RecipeAppTestCase(TestCase):
     def setUp(self):
@@ -28,13 +25,6 @@ class RecipeAppTestCase(TestCase):
         self.client = Client()
 
     def test_user_registration(self):
-        # Отправляем POST запрос для регистрации
-        response = self.client.post(reverse('signup'), {
-            'username': 'newuser',
-            'password1': 'newpass123',
-            'password2': 'newpass123'
-        })
-
         # Проверяем, что пользователь был создан
         self.assertEqual(User.objects.filter(username='newuser').count(), 1)
 
