@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Profile</title>
+    <title>Профиль</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Подключение Bootstrap CSS для упрощения стилизации -->
@@ -10,7 +10,8 @@
     <style>
         body {
             background-color: #f8f9fa;
-            padding-top: 60px;
+            padding-top: 70px; /* Отступ для фиксированной навигационной панели */
+            justify-content: center;
         }
         .profile-container {
             background-color: #ffffff;
@@ -46,16 +47,56 @@
     </style>
 </head>
 <body>
+        <!-- Навигационная панель (пример) -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'recipe_list' %}">RecipeApp</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'add_recipe' %}">Добавить рецепт</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'cart_detail' %}">Корзина</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Профиль
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="{% url 'profile' %}">Профиль</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'favorite_list' %}">Избранное</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url 'logout' %}">Выйти</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Войти</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'signup' %}">Зарегистрироваться</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
     <div class="container">
         <div class="profile-container">
-            <h2 class="profile-title">User Profile</h2>
+            <h2 class="profile-title">Профиль</h2>
             <div class="profile-details">
-                <p><strong>Username:</strong> {{ user.username }}</p>
-                <p><strong>Date Joined:</strong> {{ user.date_joined }}</p>
+                <p><strong>Имя:</strong> {{ user.username }}</p>
+                <p><strong>Дата регистрации:</strong> {{ user.date_joined }}</p>
                 <!-- Добавьте другие детали профиля, если необходимо -->
             </div>
             <div class="action-links">
-                <a href="{% url 'recipe_list' %}" class="btn btn-back-to-recipes">Back to Recipes</a>
+                <a href="{% url 'recipe_list' %}" class="btn btn-back-to-recipes">Назад</a>
                 <!-- Добавьте другие ссылки, если необходимо -->
             </div>
         </div>

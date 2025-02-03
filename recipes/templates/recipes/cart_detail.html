@@ -14,20 +14,21 @@
         }
         .cart-container {
             background-color: #ffffff;
-            padding: 30px;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .cart-title {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 1.5rem;
             color: #333333;
+            text-align: center;
         }
         .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #e9ecef;
         }
         .cart-item:last-child {
@@ -35,21 +36,24 @@
         }
         .cart-item-details {
             flex: 1;
+            display: flex;
+            font-size: 1.5rem;
         }
         .cart-item-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #555555;
+            margin-right: 8px;
         }
         .cart-item-quantity {
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #777777;
         }
         .btn-clear {
             background-color: #dc3545;
             border: none;
             color: #ffffff;
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
             border-radius: 0.25rem;
         }
         .btn-clear:hover {
@@ -57,15 +61,15 @@
             color: #ffffff;
         }
         .back-link {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             display: inline-block;
         }
         .btn-back-to-recipes {
             background-color: #6c757d;
             border: none;
             color: #ffffff;
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
             border-radius: 0.25rem;
         }
         .btn-back-to-recipes:hover {
@@ -78,7 +82,7 @@
                 align-items: flex-start;
             }
             .cart-item-details {
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
         }
     </style>
@@ -125,24 +129,35 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <div class="cart-container">
-            <h2 class="cart-title">Корзина покупок</h2>
-            <a href="{% url 'recipe_list' %}" class="back-link btn btn-back-to-recipes">Назад</a>
-            <ul class="list-unstyled">
-                {% for ingredient, quantity in cart.items %}
-                    <li class="cart-item">
-                        <span class="cart-item-name">{{ ingredient }}</span>
-                        <span class="cart-item-quantity">{{ quantity }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-            <form method="post" action="{% url 'clear_cart' %}" class="mt-4">
-                {% csrf_token %}
-                <button type="submit" class="btn-clear btn btn-danger">Очистить корзину</button>
-            </form>
+    <div class="container mt-4">   
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 col-sm-12">
+                <div class="cart-title">
+                    <h2>Корзина покупок</h2>
+                </div> 
+                <div class="cart-container">           
+                    <ul class="list-unstyled">
+                        {% for ingredient, quantity in cart.items %}
+                            <li class="cart-item">
+                                <div class="cart-item-details">
+                                    <span class="cart-item-name">{{ ingredient }}</span>
+                                    <span class="cart-item-quantity">{{ quantity }}</span>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <a href="{% url 'recipe_list' %}" class="btn btn-back-to-recipes">Назад</a>
+                    <form method="post" action="{% url 'clear_cart' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-clear">Очистить корзину</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
+    
     <!-- Подключение Bootstrap JS (обязательно для работы Navbar) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
